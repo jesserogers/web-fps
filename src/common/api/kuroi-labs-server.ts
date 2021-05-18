@@ -4,7 +4,7 @@ import { KuroiLabsAPIRoute } from './kuroi-labs-route'
 
 export class KuroiLabsServer {
 
-  public static PORT = 6969
+  public static PORT: uint32 = 6969
 
   public routes: KuroiLabsAPIRoute[]
 
@@ -16,7 +16,7 @@ export class KuroiLabsServer {
     this.api.use(bodyParser.json())
   }
 
-  public static setPort(_port: number): void {
+  public static setPort(_port: uint32): void {
     KuroiLabsServer.PORT = _port
   }
 
