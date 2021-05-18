@@ -39,7 +39,7 @@ export class Numeric {
   }
 
   public static isInt16(int: int16): boolean {
-    return Number.isInteger(int) && int >= (-1 * Math.pow(2, 15))
+    return Number.isInteger(int) && int >= Numeric.INT16_MIN && int <= Numeric.INT16_MAX
   }
 
   public static isUInt16(uint16: uint16): boolean {
