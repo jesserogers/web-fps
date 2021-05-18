@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"experimentalDecorators": true,
+		"allowJs": true,
 		"target": "ESNext",
 		"module": "commonjs",
     "lib": [
@@ -19,7 +21,6 @@
     "noUnusedParameters": true,
 		"resolveJsonModule": true,
 		"suppressImplicitAnyIndexErrors": true,
-		"experimentalDecorators": true,
 		"typeRoots": [
 			"./node_modules/@types",
 			"./src/common/types"

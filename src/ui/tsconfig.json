@@ -3,13 +3,14 @@
   "extends": "../../tsconfig.json",
   "compileOnSave": false,
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declarationMap": true,
     "composite": true,
     "downlevelIteration": true,
-    "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
@@ -17,6 +18,26 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@kuroi/components": [
+        "components/public.ts"
+      ],
+      "@kuroi/components/*": [
+        "components/*/public.ts"
+      ],
+      "@kuroi/core": [
+        "core/public.ts"
+      ],
+      "@kuroi/core/*": [
+        "core/*/public.ts"
+      ],
+      "@kuroi/views": [
+        "views/public.ts"
+      ],
+      "@kuroi/views/*": [
+        "views/*/public.ts"
+      ]
+    }
   }
 }

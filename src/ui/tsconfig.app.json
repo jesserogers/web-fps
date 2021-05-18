@@ -2,13 +2,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "types": []
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "outDir": "./out-tsc/app"
   },
-  "files": [
-    "src/ui/main.ts",
-    "src/ui/polyfills.ts"
-  ],
   "include": [
     "src/ui/**/*.d.ts"
   ]
