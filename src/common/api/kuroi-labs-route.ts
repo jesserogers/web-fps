@@ -4,7 +4,7 @@ import express from 'express'
 
 export class KuroiLabsAPIRoute {
 
-  private static readonly ROOT = `*/api`
+  private static readonly ROOT: string = `*/api`
 
   public path: string
 
