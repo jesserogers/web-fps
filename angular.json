@@ -43,7 +43,7 @@
             "index": "src/ui/index.html",
             "main": "src/ui/main.ts",
             "polyfills": "src/ui/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "src/ui/tsconfig.app.json",
             "aot": true,
             "assets": [
               "src/ui/favicon.ico",
@@ -123,7 +123,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.app.json",
+              "src/ui/tsconfig.app.json",
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
