@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "commonjs",
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+		"declaration": true,
+		"declarationMap": true,
+		"strict": false,
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"alwaysStrict": true,
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+		"resolveJsonModule": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"experimentalDecorators": true,
+		"typeRoots": [
+			"./node_modules/@types"
+		]
+	},
+  "exclude": [
+    "./dist/*",
+    "./node_modules"
+  ]
+}
