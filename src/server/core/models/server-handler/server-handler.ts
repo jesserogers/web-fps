@@ -3,9 +3,9 @@ import { Packet } from '@kuroi/common/core/server/net'
 
 type ServerHandler = (_clientId: uint32, _packet: Packet, _clients?: Map<uint32, WebSocket>) => void
 
-export class PacketHandler {
+export class ServerPacketHandler {
 
-  public static codes = {
+  public static packets = {
     WELCOME: <byte>0,
     KEYPRESS: <byte>1
   }
@@ -15,9 +15,11 @@ export class PacketHandler {
     this.keyPressed
   ]
 
-  public keyPressed(_clientId: uint32, _packet: Packet, _clients: Map<uint32, WebSocket>): void {
+  public keyPressed(_clientId: byte, _packet: Packet, _clients: Map<uint32, WebSocket>): void {
     // get keycode
     const _keyCode: Uint8Array = _packet.readBytes()
+    const _keyCodeString: string = new TextDecoder().decode(_keyCode)
+    console.log(`Received packet from client [${_clientId}] with key code: "${_keyCodeString}"`)
     // send to all other clients
     _clients.forEach((_client: WebSocket, _id: uint32) => {
       if (
@@ -27,11 +29,14 @@ export class PacketHandler {
         _client.readyState === WebSocket.OPEN
       ) {
         // create server packet
-        const _out: Packet = new Packet(Buffer.alloc(2 + _keyCode.byteLength))
+        const _byteLength: byte = Uint8Array.BYTES_PER_ELEMENT * 2 + _keyCode.byteLength
+        const _out: Packet = new Packet(Buffer.alloc(_byteLength))
         // byte schema: packetId, clientId, keycode
-        _out.writeByte(PacketHandler.codes.KEYPRESS)
-        _out.writeByte(_clientId)
-        _out.writeBytes(_keyCode)
+        _out.writeBytes([
+          ServerPacketHandler.packets.KEYPRESS,
+          _clientId,
+          ..._keyCode
+        ])
         // send to client
         _client.send(_out.data())
       }
