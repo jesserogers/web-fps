@@ -1,13 +1,15 @@
 import { Request, Response } from 'express'
+import { ILobby } from '@kuroi/common/core/models'
 import { KuroiLabsAPIEndpoint } from '../../../../common/api'
 import { Lobby, LobbyManager } from '../../../core'
 
 function newLobbyHandler(req: Request, res: Response) {
   try {
     // create new lobby
-    const _lobby = new Lobby()
+    const _lobbyConfig: ILobby = { name: 'Shitter Lobby', maxClients: 6 }
+    const _lobby = new Lobby(_lobbyConfig)
     LobbyManager.getSharedInstance().add(_lobby)
-    res.json({ lobbyId: _lobby.id })
+    res.json(_lobby.getConfig())
   } catch (_err) {
     console.error('[newLobbyHandler] uncaught exception', _err)
     res.sendStatus(500).json({ error: 'Internal server error' })
