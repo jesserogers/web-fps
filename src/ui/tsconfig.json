@@ -39,5 +39,17 @@
         "views/*/public.ts"
       ]
     }
-  }
+  },
+  "include": [
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "./**/*.spec.ts",
+    "./**/test.ts"
+  ],
+  "references": [
+    {
+      "path": "../common"
+    }
+  ]
 }

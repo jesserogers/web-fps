@@ -4,9 +4,10 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "allowJs": true,
+    "baseUrl": "./",
     "outDir": "./out-tsc/app"
   },
   "include": [
-    "src/ui/**/*.d.ts"
+    "./**/*.ts"
   ]
 }

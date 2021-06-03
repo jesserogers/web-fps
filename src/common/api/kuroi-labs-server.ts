@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser'
 import express from 'express'
+import http from 'http'
 import { KuroiLabsAPIRoute } from './kuroi-labs-route'
 
 export class KuroiLabsServer {
@@ -9,6 +10,8 @@ export class KuroiLabsServer {
   public routes: KuroiLabsAPIRoute[]
 
   public api = express()
+
+  protected httpServer: http.Server
 
   constructor(routes: KuroiLabsAPIRoute[]) {
     this.routes = routes || []
@@ -29,7 +32,7 @@ export class KuroiLabsServer {
   }
 
   public start(): void {
-    this.api.listen(KuroiLabsServer.PORT, () => {
+    this.httpServer = this.api.listen(KuroiLabsServer.PORT, () => {
       console.log('KuroiLabs Server up and running on port ' + KuroiLabsServer.PORT)
     })
   }

@@ -1,4 +1,4 @@
-import { KuroiLabsServer } from '../common/api/public'
+import { WebServer } from './core/server'
 
-const server = new KuroiLabsServer([])
+const server = new WebServer([])
 server.start()
