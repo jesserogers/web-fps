@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { ClientPacket } from '@kuroi/common/core/client/net'
-import WebSocket from 'ws'
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +10,10 @@ export class WebClient {
 
   private static socket: WebSocket
 
+  public static decoder: TextDecoder
+
+  public static encoder: TextEncoder
+
   constructor() {
 
   }
@@ -19,28 +22,38 @@ export class WebClient {
     return WebClient.id
   }
 
-  public static setId(id: uint32): void {
-    WebClient.id = id
+  public static setId(_id: uint32): void {
+    WebClient.id = _id
   }
 
   public static getSocket(): WebSocket {
     return WebClient.socket
   }
 
-  public static setSocket(socket: WebSocket): void {
-    WebClient.socket = socket
+  public static setSocket(_socket: WebSocket): void {
+    WebClient.socket = _socket
   }
 
-  public static send(packet: ClientPacket): void {
+  public static getEncoder(): TextEncoder {
+    if (!WebClient.encoder) {
+      WebClient.encoder = new TextEncoder()
+    }
+    return WebClient.encoder
+  }
+
+  public static getDecoder(): TextDecoder {
+    if (!WebClient.decoder) {
+      WebClient.decoder = new TextDecoder()
+    }
+    return WebClient.decoder
+  }
+
+  public static send(_packet: ClientPacket): void {
     if (!WebClient.socket) {
       console.warn('[WebClient.send] no available socket')
       return
     }
-    if (WebClient.socket.readyState !== WebSocket.OPEN) {
-      console.warn('[WebClient.send] connection not ready')
-      return
-    }
-    WebClient.socket.send(packet.data())
+    WebClient.socket.send(_packet.data())
   }
 
 }
