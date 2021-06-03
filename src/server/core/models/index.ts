@@ -1,2 +1,2 @@
 export * from './lobby'
-export * from './packet-handler'
+export * from './server-handler'
