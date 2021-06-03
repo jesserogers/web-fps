@@ -39,18 +39,18 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/web-fps",
-            "index": "src/ui/index.html",
-            "main": "src/ui/main.ts",
-            "polyfills": "src/ui/polyfills.ts",
-            "tsConfig": "src/ui/tsconfig.app.json",
+            "outputPath": "dist/client",
+            "index": "src/client/index.html",
+            "main": "src/client/main.ts",
+            "polyfills": "src/client/polyfills.ts",
+            "tsConfig": "src/client/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/ui/favicon.ico",
-              "src/ui/assets"
+              "src/client/favicon.ico",
+              "src/client/assets"
             ],
             "styles": [
-              "src/ui/styles.scss"
+              "src/client/styles.scss"
             ],
             "scripts": []
           },
@@ -58,8 +58,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/ui/environments/environment.ts",
-                  "with": "src/ui/environments/environment.prod.ts"
+                  "replace": "src/client/environments/environment.ts",
+                  "with": "src/client/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -106,16 +106,16 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/ui/test.ts",
-            "polyfills": "src/ui/polyfills.ts",
+            "main": "src/client/test.ts",
+            "polyfills": "src/client/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/ui/favicon.ico",
-              "src/ui/assets"
+              "src/client/favicon.ico",
+              "src/client/assets"
             ],
             "styles": [
-              "src/ui/styles.scss"
+              "src/client/styles.scss"
             ],
             "scripts": []
           }
@@ -124,7 +124,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/ui/tsconfig.app.json",
+              "src/client/tsconfig.app.json",
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
