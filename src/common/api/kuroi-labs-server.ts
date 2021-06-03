@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import http from 'http'
+import cors from 'cors'
 import { KuroiLabsAPIRoute } from './kuroi-labs-route'
 
 export class KuroiLabsServer {
@@ -17,6 +18,7 @@ export class KuroiLabsServer {
     this.routes = routes || []
     this.configureRoutes()
     this.api.use(bodyParser.json())
+    this.api.use(cors())
   }
 
   public static setPort(_port: uint32): void {
