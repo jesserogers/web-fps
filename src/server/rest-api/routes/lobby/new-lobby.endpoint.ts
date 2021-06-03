@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'
-import { ILobby } from '@kuroi/common/core/models'
 import { KuroiLabsAPIEndpoint } from '@kuroi/common/api'
+import { ILobby } from '@kuroi/common/core/models'
+import { Request, Response } from 'express'
 import { Lobby, LobbyManager } from '../../../core'
 
 function newLobbyHandler(req: Request, res: Response) {
