@@ -16,7 +16,7 @@ export class WebServer extends KuroiLabsServer {
 
   constructor(routes: KuroiLabsAPIRoute[]) {
     super(routes)
-    this.api.use('/', express.static('dist/web-fps'))
+    this.api.use('/*', express.static('dist/web-fps'))
     WebServer._sharedInstance = this
   }
 

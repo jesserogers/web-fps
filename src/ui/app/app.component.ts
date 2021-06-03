@@ -1,7 +1,10 @@
-import { AfterViewInit, Component } from '@angular/core'
+import { AfterViewInit, Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ClientPacket } from '@kuroi/common/core/client/net';
 import { LobbyService } from '@kuroi/core/services';
-import { take } from 'rxjs/operators'
+import { ClientPacketHandler } from '@kuroi/core/services/client-handler';
+import { fromEvent } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -18,11 +21,21 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     console.log(this.router.url)
+    fromEvent(document, 'keyup').pipe()
   }
 
   public newLobby(): void {
-    this.lobbyService.createLobby().pipe(take(1)).subscribe(res => {
-      console.log('CREATED LOBBY:', res)
+    this.lobbyService.createLobby().pipe(
+      switchMap((lobby: { lobbyId: uint32 }) =>
+        this.lobbyService.connect(lobby.lobbyId)
+      ),
+      take(1)
+    ).subscribe((_packet: ClientPacket) => {
+      // first byte is always packet ID
+      const _packetId: byte = _packet.readByte()
+      console.log(`received packet [${_packetId}] from server`)
+      // run handler for packet ID
+      ClientPacketHandler.handlers[_packetId](_packet)
     })
   }
 

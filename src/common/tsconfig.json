@@ -6,6 +6,7 @@
     "composite": true
   },
   "include": [
-    "./**/*.ts"
+    "./**/*.ts",
+    "package.json"
   ]
 }
