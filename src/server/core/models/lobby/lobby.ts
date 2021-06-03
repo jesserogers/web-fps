@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { IdGenerator, Packet, Randomizer, ILobby } from '@kuroi/common/core'
-import { PacketHandler } from '../packet-handler/packet-handler'
+import { ServerPacketHandler } from '../server-handler/server-handler'
 
 export class Lobby implements ILobby {
 
@@ -16,7 +16,7 @@ export class Lobby implements ILobby {
 
   public wss: WebSocket.Server
   
-  private packetHander = new PacketHandler()
+  private packetHander = new ServerPacketHandler()
 
   private idGenerator = new IdGenerator()
 
