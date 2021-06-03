@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "experimentalDecorators": true,
-		"allowJs": true
+		"allowJs": true,
+    "resolveJsonModule": true
   },
   "references": [
     { "path": "./src/common" },
