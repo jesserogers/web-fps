@@ -1,5 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 import { Router } from '@angular/router';
+import { LobbyService } from '@kuroi/core/services';
+import { take } from 'rxjs/operators'
 
 @Component({
   selector: 'app-root',
@@ -7,16 +9,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit {
-  title = 'kuroi-labs-ui';
 
   public clientId: uint32
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private lobbyService: LobbyService) {
 
   }
 
   ngAfterViewInit() {
     console.log(this.router.url)
+  }
+
+  public newLobby(): void {
+    this.lobbyService.createLobby().pipe(take(1)).subscribe(res => {
+      console.log('CREATED LOBBY:', res)
+    })
   }
 
 }

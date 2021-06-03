@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { ClientPacket } from '@kuroi/common/core/client/net'
 import { Observable, Subscriber } from 'rxjs'
 import WebSocket from 'ws'
-import { ClientPacket } from '../../../common/core/client/net'
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class LobbyService {
   }
 
   public connect(_lobbyId: uint32): Observable<any> {
-    this.socket = new WebSocket(`ws://${window.location.host}/lobby/${_lobbyId}`)
+    this.socket = new WebSocket(`ws://${window.location.host}/api/lobby/${_lobbyId}`)
     const that = this
     return new Observable(function _connect(observer: Subscriber<any>) {
       that.socket.addEventListener('message', event => {

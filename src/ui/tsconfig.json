@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
+    "outDir": "../../dist/out-tsc",
     "sourceMap": true,
     "declarationMap": true,
     "composite": true,
@@ -24,19 +24,19 @@
         "components/public.ts"
       ],
       "@kuroi/components/*": [
-        "components/*/public.ts"
+        "components/*"
       ],
       "@kuroi/core": [
-        "core/public.ts"
+        "core/"
       ],
       "@kuroi/core/*": [
-        "core/*/public.ts"
+        "core/*"
       ],
       "@kuroi/views": [
-        "views/public.ts"
+        "views/"
       ],
       "@kuroi/views/*": [
-        "views/*/public.ts"
+        "views/*"
       ]
     }
   },
