@@ -89,7 +89,7 @@ export class Lobby implements ILobby {
 
   private onClose(clientId: uint32): void {
     const _client = this.clients.get(clientId)
-    console.log(`Removing client [${clientId}]`)
+    console.log(`Removing Client [${clientId}] from Lobby [${this.id}]`)
     // remove listeners
     _client.removeAllListeners()
   }
