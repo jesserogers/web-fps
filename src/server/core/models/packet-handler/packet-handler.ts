@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { Packet } from '../../../../common/core/net'
+import { Packet } from '@kuroi/common/core/server/net'
 
 type ServerHandler = (_clientId: uint32, _packet: Packet, _clients?: Map<uint32, WebSocket>) => void
 
