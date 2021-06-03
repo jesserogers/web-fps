@@ -9,3 +9,4 @@ type uint64 = number
 type int64 = number
 type float = number
 type int = number
+type IdFactory = Generator<int, int, int>
