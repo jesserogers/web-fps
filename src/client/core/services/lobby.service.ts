@@ -34,6 +34,7 @@ export class LobbyService {
       // return an Observable ClientPacket stream
       return new Observable<ClientPacket>(function _connect(observer: Subscriber<any>) {
         _socket.addEventListener('open', () => {
+          WebClient.setState(WebSocket.OPEN)
           console.log(`Opened gateway to server, awaiting client ID...`)
           _socket.addEventListener('message', event => {
             observer.next(new ClientPacket(event.data))
