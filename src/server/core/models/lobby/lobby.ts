@@ -82,7 +82,7 @@ export class Lobby implements ILobby {
   private onMessage(_data: WebSocket.Data): void {
     const _packet = new Packet(_data as Buffer)
     const _packetId: byte = _packet.readByte()
-    const _clientId: uint32 = _packet.readByte()
+    const _clientId: byte = _packet.readByte()
     console.log(`Received packet from client [${_clientId}]`)
     this.packetHander.handlers[_packetId](_clientId, _packet, this.clients)
   }
