@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AppComponent
-  },
-  {
-    path: 'lobby/:lobbyId',
-    component: AppComponent
+    component: AppComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('../views/home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'lobby',
+        loadChildren: () => import('../views/lobby/lobby.module').then(m => m.LobbyModule)
+      }
+    ]
   }
 ];
 
