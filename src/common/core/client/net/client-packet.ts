@@ -45,7 +45,7 @@ export class ClientPacket {
   }
 
   public writeUint32(_uint32: uint32): void {
-    const _view = new DataView(this.buffer, this.writePosition)
+    const _view = new DataView(this.buffer)
     _view.setUint32(this.writePosition, _uint32)
     this.writePosition += Uint32Array.BYTES_PER_ELEMENT
   }
@@ -57,7 +57,7 @@ export class ClientPacket {
   }
 
   public writeInt32(_int32: int32): void {
-    const _view = new DataView(this.buffer, this.writePosition)
+    const _view = new DataView(this.buffer)
     _view.setInt32(this.writePosition, _int32)
     this.writePosition += Int32Array.BYTES_PER_ELEMENT
   }
@@ -69,7 +69,7 @@ export class ClientPacket {
   }
 
   public writeFloat(_float: float): void {
-    const _view = new DataView(this.buffer, this.writePosition)
+    const _view = new DataView(this.buffer)
     _view.setFloat32(this.writePosition, _float)
     this.writePosition += Float32Array.BYTES_PER_ELEMENT
   }
