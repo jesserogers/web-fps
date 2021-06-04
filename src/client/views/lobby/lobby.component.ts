@@ -43,7 +43,6 @@ export class LobbyComponent extends Destroyer implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.clientEngine.start()
     const system: ClientNetworkSystem = this.clientEngine.net()
     if (!system) {
       console.error('Unable to find system "networked"')
@@ -56,7 +55,7 @@ export class LobbyComponent extends Destroyer implements OnInit, AfterViewInit {
       takeUntil(this._destroyed$)
     ).subscribe(
       tick => {
-        system.serverTick(tick, ClientEngineService.fixedDeltaTime)
+        system.serverTick(tick, ClientEngineService.step)
       }
     )
   }
