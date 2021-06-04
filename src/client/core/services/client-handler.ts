@@ -7,7 +7,7 @@ export class ClientPacketHandler {
 
   public static packets = {
     WELCOME: <byte>0,
-    KEYPRESS: <byte>1
+    INPUTS: <byte>1
   }
 
   public static handlers: ClientHandler[] = [
