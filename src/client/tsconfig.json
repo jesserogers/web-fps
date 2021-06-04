@@ -37,6 +37,12 @@
       ],
       "@kuroi/views/*": [
         "views/*"
+      ],
+      "@kuroi/game-objects": [
+        "game-objects/"
+      ],
+      "@kuroi/game-objects/*": [
+        "game-objects/*"
       ]
     }
   },
