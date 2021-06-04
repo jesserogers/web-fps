@@ -55,16 +55,16 @@ export class ClientEngineService extends Destroyer implements OnDestroy {
     return ClientEngineService.deltaTime / 1000
   }
 
-  public static setDeltaTime(_deltaTime: float): void {
-    ClientEngineService.deltaTime = _deltaTime
+  public static setDeltaTime(_deltaTime: int): void {
+    ClientEngineService.deltaTime = Math.min(_deltaTime, 100)
   }
 
   public static getFixedDeltaTime(): float {
     return ClientEngineService.fixedDeltaTime / 1000
   }
 
-  public static setFixedDeltaTime(_fixedDeltaTime: float): void {
-    ClientEngineService.fixedDeltaTime = _fixedDeltaTime
+  public static setFixedDeltaTime(_fixedDeltaTime: int): void {
+    ClientEngineService.fixedDeltaTime = Math.min(_fixedDeltaTime, 100)
   }
 
   public stop(): void {
