@@ -10,6 +10,12 @@ import { Destroyer } from '../utils'
 })
 export class UserInputService extends Destroyer {
 
+  private static _sharedInstance: UserInputService
+
+  public static getSharedInstance(): UserInputService {
+    return UserInputService._sharedInstance || null
+  }
+
   private pressed = new Set<string>()
 
   constructor() {
@@ -38,7 +44,7 @@ export class UserInputService extends Destroyer {
     return !this.isKeyDown(_key)
   }
 
-  public getCompressedInputs(): uint32 {
+  public getCompressedFlags(): uint32 {
     let _result: uint32 = 0
     if (this.isKeyDown('w')) {
       _result = ByteConverter.turnBitOn(EUserInputs.FORWARD, _result)

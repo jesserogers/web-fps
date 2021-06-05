@@ -109,7 +109,7 @@ export class AFrameService {
         // create a fixedUpdate method
         this.serverTick = function(_tick: int, _fixedDeltaTime: float) {
           // get inputs pressed at this server tick
-          const _inputs = aframeService.inputs.getCompressedInputs()
+          const _inputs = aframeService.inputs.getCompressedFlags()
           // if no input change, don't send redundant data
           if (_inputs === this.cachedInputs) {
             return
