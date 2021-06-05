@@ -43,4 +43,8 @@ export class CubeBoi extends GameObject {
     this.state.update({ rotation: this.cube.rotation })
   }
 
+  private consumeUserInput(): void {
+    
+  }
+
 }

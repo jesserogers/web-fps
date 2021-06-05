@@ -4,7 +4,7 @@ import { Component as AFrameComponent, Entity } from 'aframe'
 import { ClientNetworkSystem } from '../types'
 import { ClientPacketHandler } from './client-handler'
 import { WebClient } from './client.service'
-import { UserInputService } from './keyboard-control.service'
+import { UserInputService } from './user-inputs.service'
 
 @Injectable({
   providedIn: 'root'
