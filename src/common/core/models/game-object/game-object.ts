@@ -1,5 +1,5 @@
 import { Randomizer } from '../../utils'
-import { IGameObjectState } from './game-object-state.interface'
+import { GameObjectState } from './game-object-state'
 import { IGameObject } from './game-object.interface'
 
 export abstract class GameObject implements IGameObject {
@@ -10,13 +10,15 @@ export abstract class GameObject implements IGameObject {
 
   public online: boolean
 
-  public state: IGameObjectState
+  public state: GameObjectState
 
-  public previousState: IGameObjectState
+  public previousState: GameObjectState
 
   constructor(object?: IGameObject) {
     this.objectId = object && object.objectId || Randomizer.generateNumericId()
     this.online = object && object.online || false
+    this.previousState = new GameObjectState(object && object.previousState)
+    this.state = new GameObjectState(object && object.state)
     this.init()
   }
 
@@ -24,8 +26,10 @@ export abstract class GameObject implements IGameObject {
   
   abstract start?(): void
 
+  // client side refresh rate
   abstract update?(deltaTime: float): void
 
+  // fixed time step
   abstract fixedUpdate?(tick: int, fixedDeltaTime: float): void
 
   abstract stop?(): void
