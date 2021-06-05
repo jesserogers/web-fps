@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { CubeBoi } from '@kuroi/game-objects'
-import { ClientEngineService, LobbyService } from '@kuroi/core/services'
+import { ClientEngine, LobbyService } from '@kuroi/core/services'
 import { take } from 'rxjs/operators'
 import { PerspectiveCamera, Scene } from 'three'
 
@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private lobbyService: LobbyService,
     private router: Router,
-    private clientEngine: ClientEngineService
+    private clientEngine: ClientEngine
   ) {
 
   }
