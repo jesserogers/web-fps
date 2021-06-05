@@ -19,19 +19,28 @@ export class CubeBoi extends GameObject {
     
   }
 
-  public update(deltaTime: float): void {
-    // @todo: interpolate position
+  public fixedUpdate(tick: int, fixedDeltaTime: float): void {
+    // capture previous state before running simulation
+    this.previousState.update(this.state)
+    // run "physics" simulation
+    this.simulate(fixedDeltaTime)
   }
 
-  public fixedUpdate(tick: int, fixedDeltaTime: float): void {
-    this.previousState.rotation = { ...this.cube.rotation }
-    this.previousState.position = { ...this.cube.position }
-    this.cube.rotation.x += 100 * fixedDeltaTime
-    this.cube.rotation.y += 100 * fixedDeltaTime
+  public update(deltaTime: float): void {
+    // snap cube back to previous state and interp to current state
+    this.cube.rotation.x = this.state.rotation.x * deltaTime + this.previousState.rotation.x  * (1 - deltaTime)
+    this.cube.rotation.y = this.state.rotation.y * deltaTime + this.previousState.rotation.y  * (1 - deltaTime)
   }
 
   public stop(): void {
 
+  }
+
+  private simulate(fixedDeltaTime: float): void {
+    this.cube.rotation.x += 1000 * fixedDeltaTime
+    this.cube.rotation.y += 1000 * fixedDeltaTime
+    // set current state
+    this.state.update({ rotation: this.cube.rotation })
   }
 
 }
