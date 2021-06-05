@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ClientEngine, ClientPacketHandler, KeyboardControlService, LobbyService, WebClient } from '@kuroi/core/services';
+import { ClientEngine, ClientPacketHandler, UserInputService, LobbyService, WebClient } from '@kuroi/core/services';
 import { ClientNetworkSystem } from '@kuroi/core/types';
 import { Destroyer } from '@kuroi/core/utils';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class LobbyComponent extends Destroyer implements OnInit, AfterViewInit {
   constructor(
     private lobbyService: LobbyService,
     private route: ActivatedRoute,
-    private keyboard: KeyboardControlService,
+    private keyboard: UserInputService,
     private clientEngine: ClientEngine
   ) {
     super()

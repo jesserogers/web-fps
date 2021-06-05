@@ -8,7 +8,7 @@ import { Destroyer } from '../utils'
 @Injectable({
   providedIn: 'root'
 })
-export class KeyboardControlService extends Destroyer {
+export class UserInputService extends Destroyer {
 
   private pressed = new Set<string>()
 
