@@ -1,22 +1,30 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
 import { GameObject } from '@kuroi/common/core/models/game-object'
+import { UserInputService } from '@kuroi/core/services';
 
 export class CubeBoi extends GameObject {
 
   public cube: Mesh
+
+  private userInput: UserInputService
+
+  private inputs: uint32
 
   constructor() {
     super()
   }
 
   public init() {
+    // set up user input
+    this.userInput = UserInputService.getSharedInstance()
+    // create cube
     const geometry = new BoxGeometry()
-    const material = new MeshBasicMaterial( { color: 0x00ff00 } )
-    this.cube = new Mesh( geometry, material )
+    const material = new MeshBasicMaterial({ color: 0x00ff00 })
+    this.cube = new Mesh(geometry, material)
   }
 
   public start(): void {
-    
+    console.log('CubeBoi started yuh')
   }
 
   public fixedUpdate(tick: int, fixedDeltaTime: float): void {
@@ -30,6 +38,8 @@ export class CubeBoi extends GameObject {
     // snap cube back to previous state and interp to current state
     this.cube.rotation.x = this.state.rotation.x * deltaTime + this.previousState.rotation.x  * (1 - deltaTime)
     this.cube.rotation.y = this.state.rotation.y * deltaTime + this.previousState.rotation.y  * (1 - deltaTime)
+    // consume user input each frame
+    this.consumeUserInput()
   }
 
   public stop(): void {
@@ -44,7 +54,7 @@ export class CubeBoi extends GameObject {
   }
 
   private consumeUserInput(): void {
-    
+    const _inputs: uint32 = this.userInput.getCompressedFlags()
   }
 
 }
