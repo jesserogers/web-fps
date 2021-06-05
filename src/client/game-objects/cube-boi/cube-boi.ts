@@ -1,11 +1,9 @@
-import { BoxGeometry, Euler, Mesh, MeshBasicMaterial } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
 import { GameObject } from '@kuroi/common/core/models/game-object'
 
 export class CubeBoi extends GameObject {
 
   public cube: Mesh
-
-  private cachedRotation: { x: float, y: float, z: float }
 
   constructor() {
     super()
@@ -26,7 +24,8 @@ export class CubeBoi extends GameObject {
   }
 
   public fixedUpdate(tick: int, fixedDeltaTime: float): void {
-    this.cachedRotation = { ...this.cube.rotation }
+    this.previousState.rotation = { ...this.cube.rotation }
+    this.previousState.position = { ...this.cube.position }
     this.cube.rotation.x += 100 * fixedDeltaTime
     this.cube.rotation.y += 100 * fixedDeltaTime
   }
