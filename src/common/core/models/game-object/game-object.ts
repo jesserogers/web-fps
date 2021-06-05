@@ -1,4 +1,5 @@
 import { Randomizer } from '../../utils'
+import { IGameObjectState } from './game-object-state.interface'
 import { IGameObject } from './game-object.interface'
 
 export abstract class GameObject implements IGameObject {
@@ -8,6 +9,10 @@ export abstract class GameObject implements IGameObject {
   public name: string
 
   public online: boolean
+
+  public state: IGameObjectState
+
+  public previousState: IGameObjectState
 
   constructor(object?: IGameObject) {
     this.objectId = object && object.objectId || Randomizer.generateNumericId()
