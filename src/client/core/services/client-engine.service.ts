@@ -83,8 +83,9 @@ export class ClientEngineService extends Destroyer implements OnDestroy {
     this.lastRenderTimestamp = performance.now()
     this._shouldRender = true
     // run start hook before gameloop begins
-    _gameObjects.forEach(_object => _object.start());
-    (function _gameLoop(_timestamp: int = 0) {
+    _gameObjects.forEach(_object => _object.start())
+    // define engine-level game loop logic
+    function _gameLoop(_timestamp: int = 0) {
       if (!clientEngine._shouldRender) {
         return
       }
@@ -96,15 +97,18 @@ export class ClientEngineService extends Destroyer implements OnDestroy {
         // @todo: capture state for networked objects in scene
         const tick: int = clientEngine.tick()
         ClientEngineService.setFixedDeltaTime(_timestamp - clientEngine.lastTick)
+        // run fixedUpdate hook for each GameObject
         _gameObjects.forEach(_object => {
           _object.fixedUpdate(tick, ClientEngineService.getFixedDeltaTime())
         })
         ClientEngineService.lagTime -= ClientEngineService.STEP_MS
       }
-      const _interp: float = ClientEngineService.lagTime / ClientEngineService.STEP_MS
+      // calculate alpha
+      const alpha: float = ClientEngineService.lagTime / ClientEngineService.STEP_MS
       // run client-side refresh rate update
+      // for each GameObject
       _gameObjects.forEach(_object => {
-        _object.update(_interp)
+        _object.update(alpha)
       })
       // render scene
       clientEngine.renderer.render(_scene, _camera)
@@ -112,7 +116,8 @@ export class ClientEngineService extends Destroyer implements OnDestroy {
       clientEngine.lastRenderTimestamp = _timestamp
       // run game loop
       requestAnimationFrame(_gameLoop)
-    })()
+    }
+    _gameLoop(performance.now())
   }
 
   // client engine level get method for networking system
