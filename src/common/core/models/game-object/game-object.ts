@@ -14,11 +14,14 @@ export abstract class GameObject implements IGameObject {
 
   public previousState: GameObjectState
 
+  public children: Map<int, GameObject>
+
   constructor(object?: IGameObject) {
     this.objectId = object && object.objectId || Randomizer.generateNumericId()
     this.online = object && object.online || false
     this.previousState = new GameObjectState(object && object.previousState)
     this.state = new GameObjectState(object && object.state)
+    this.children = new Map()
     this.init()
   }
 
@@ -27,11 +30,28 @@ export abstract class GameObject implements IGameObject {
   abstract start?(): void
 
   // client side refresh rate
-  abstract update?(deltaTime: float): void
+  abstract update?(alphaTime: float): void
 
   // fixed time step
   abstract fixedUpdate?(tick: int, fixedDeltaTime: float): void
 
   abstract stop?(): void
+
+  public addChild(object: GameObject): void {
+    this.children.set(object.objectId, object)
+  }
+
+  public addChildren(objects: GameObject[]): void {
+    objects.forEach(object => this.addChild(object))
+  }
+
+  public getChild(id: int): GameObject {
+    return this.children.get(id)
+  }
+
+  public removeChild(id: int): void {
+    // @todo: destroy handlers?
+    this.children.delete(id)
+  }
 
 }
