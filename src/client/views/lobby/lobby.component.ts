@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ClientEngine, ClientPacketHandler, UserInputService, LobbyService, WebClient } from '@kuroi/core/services';
+import { ClientPacketHandler, UserInputService, LobbyService, WebClient } from '@kuroi/core/services';
 import { ClientNetworkSystem } from '@kuroi/core/types';
 import { Destroyer } from '@kuroi/core/utils';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
@@ -15,8 +15,7 @@ export class LobbyComponent extends Destroyer implements OnInit, AfterViewInit {
   constructor(
     private lobbyService: LobbyService,
     private route: ActivatedRoute,
-    private keyboard: UserInputService,
-    private clientEngine: ClientEngine
+    private keyboard: UserInputService
   ) {
     super()
   }
@@ -37,27 +36,10 @@ export class LobbyComponent extends Destroyer implements OnInit, AfterViewInit {
         }
       )
     }
-    this.clientEngine.aframe.registerNetworkSystem()
-    this.clientEngine.aframe.registerNetworkedPlayerObject()
-    this.clientEngine.aframe.registerPlayerMovement()
   }
 
   ngAfterViewInit() {
-    const system: ClientNetworkSystem = this.clientEngine.net()
-    if (!system) {
-      console.error('Unable to find system "networked"')
-    }
-    // wait until connection is opened
-    WebClient.state$.pipe(
-      filter(_state => _state === WebSocket.OPEN),
-      // switch to consuming ticks
-      switchMap(() => this.clientEngine.tick$),
-      takeUntil(this._destroyed$)
-    ).subscribe(
-      tick => {
-        system.serverTick(tick, ClientEngine.step)
-      }
-    )
+    
   }
 
 }
