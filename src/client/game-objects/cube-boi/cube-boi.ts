@@ -1,22 +1,20 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
-import { GameObject } from '@kuroi/common/core/models/game-object'
+import { GameObject, IGameObject } from '@kuroi/common/core/models/game-object'
 import { UserInputService } from '@kuroi/core/services';
 
 export class CubeBoi extends GameObject {
 
-  public cube: Mesh
+  private static MOVEMENT_SPEED: float = 4.20 // lul
 
-  private userInput: UserInputService
+  public cube: Mesh
 
   private inputs: uint32
 
-  constructor() {
-    super()
+  constructor(private userInput: UserInputService, cube?: IGameObject) {
+    super(cube)
   }
 
   public init() {
-    // set up user input
-    this.userInput = UserInputService.getSharedInstance()
     // create cube
     const geometry = new BoxGeometry()
     const material = new MeshBasicMaterial({ color: 0x00ff00 })
@@ -36,10 +34,14 @@ export class CubeBoi extends GameObject {
 
   public update(deltaTime: float): void {
     // snap cube back to previous state and interp to current state
-    this.cube.rotation.x = this.state.rotation.x * deltaTime + this.previousState.rotation.x  * (1 - deltaTime)
-    this.cube.rotation.y = this.state.rotation.y * deltaTime + this.previousState.rotation.y  * (1 - deltaTime)
+    this.interpolate(deltaTime)
     // consume user input each frame
     this.consumeUserInput()
+  }
+
+  private interpolate(deltaTime: float): void {
+    this.cube.position.x = this.state.position.x * deltaTime + this.previousState.position.x  * (1 - deltaTime)
+    this.cube.position.z = this.state.position.z * deltaTime + this.previousState.position.z  * (1 - deltaTime)
   }
 
   public stop(): void {
@@ -47,14 +49,29 @@ export class CubeBoi extends GameObject {
   }
 
   private simulate(fixedDeltaTime: float): void {
-    this.cube.rotation.x += 1000 * fixedDeltaTime
-    this.cube.rotation.y += 1000 * fixedDeltaTime
+    // get position data from current state
+    let { x, y, z } = this.state.position
+    // handle movement inputs
+    if (this.userInput.forward) {
+      z = z - (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+    }
+    if (this.userInput.backward) {
+      z = z + (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+    }
+    if (this.userInput.left) {
+      x = x - (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+    }
+    if (this.userInput.right) {
+      x = x + (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+    }
+    // apply simulation result to actual 3D object
+    this.cube.position.set(x, y, z)
     // set current state
-    this.state.update({ rotation: this.cube.rotation })
+    this.state.update({ position: this.cube.position })
   }
 
   private consumeUserInput(): void {
-    const _inputs: uint32 = this.userInput.getCompressedFlags()
+    this.inputs = this.userInput.getCompressedFlags()
   }
 
 }
