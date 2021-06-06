@@ -10,12 +10,6 @@ import { Destroyer } from '../utils'
 })
 export class UserInputService extends Destroyer {
 
-  private static _sharedInstance: UserInputService
-
-  public static getSharedInstance(): UserInputService {
-    return UserInputService._sharedInstance || null
-  }
-
   private pressed = new Set<string>()
 
   constructor() {
@@ -23,13 +17,29 @@ export class UserInputService extends Destroyer {
     this.listen()
   }
 
+  get forward(): boolean {
+    return this.isKeyDown('w') && this.isKeyUp('s')
+  }
+
+  get backward(): boolean {
+    return this.isKeyDown('s') && this.isKeyUp('w')
+  }
+
+  get left(): boolean {
+    return this.isKeyDown('a') && this.isKeyUp('d')
+  }
+
+  get right(): boolean {
+    return this.isKeyDown('d') && this.isKeyUp('a')
+  }
+
   private listen(): void {
-    fromEvent<KeyboardEvent>(document, 'keydown').pipe(takeUntil(this._destroyed$)).subscribe(
+    fromEvent<KeyboardEvent>(window, 'keydown').pipe(takeUntil(this._destroyed$)).subscribe(
       event => {
         this.pressed.add(event.key.toLowerCase())
       }
     )
-    fromEvent<KeyboardEvent>(document, 'keyup').pipe(takeUntil(this._destroyed$)).subscribe(
+    fromEvent<KeyboardEvent>(window, 'keyup').pipe(takeUntil(this._destroyed$)).subscribe(
       event => {
         this.pressed.delete(event.key.toLowerCase())
       }
