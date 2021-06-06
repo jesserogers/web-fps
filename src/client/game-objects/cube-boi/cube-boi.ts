@@ -8,8 +8,6 @@ export class CubeBoi extends GameObject {
 
   public cube: Mesh
 
-  private inputs: uint32
-
   constructor(private userInput: UserInputService, cube?: IGameObject) {
     super(cube)
   }
@@ -35,8 +33,6 @@ export class CubeBoi extends GameObject {
   public update(deltaTime: float): void {
     // snap cube back to previous state and interp to current state
     this.interpolate(deltaTime)
-    // consume user input each frame
-    this.consumeUserInput()
   }
 
   private interpolate(deltaTime: float): void {
@@ -68,10 +64,6 @@ export class CubeBoi extends GameObject {
     this.cube.position.set(x, y, z)
     // set current state
     this.state.update({ position: this.cube.position })
-  }
-
-  private consumeUserInput(): void {
-    this.inputs = this.userInput.getCompressedFlags()
   }
 
 }
