@@ -1,35 +1,31 @@
-import { Injectable, OnDestroy } from '@angular/core';
 import { GameObject } from '@kuroi/common/core/models';
 import { Subject } from 'rxjs';
 import { Camera, Scene, WebGLRenderer } from 'three';
-import { ClientNetworkSystem } from '../types';
-import { Destroyer } from '../utils';
-import { AFrameService } from './aframe.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ClientEngine extends Destroyer implements OnDestroy {
+export class ClientEngine {
 
+  // #region statics
   private static _sharedInstance: ClientEngine
 
   public static getSharedinstance(): ClientEngine {
+    if (!ClientEngine._sharedInstance) {
+      ClientEngine._sharedInstance = new ClientEngine()
+    }
     return this._sharedInstance
   }
 
-  public static readonly TICK_RATE: byte = 1
-
-  public static step: float = 1 / ClientEngine.TICK_RATE
-
-  public static STEP_MS: float = 1000 / ClientEngine.TICK_RATE
-
-  private static deltaTime: int = 0
-
-  private static _accumulator: int = 0
+  public static TICK_RATE: byte = 24
 
   public static alphaTime: float = 0
 
   public static fixedDeltaTime: int = 0
+  // #endregion
+
+  private deltaTime: int = 0
+
+  private __accumulator: int = 0
+
+  private fixedDeltaTime: int = 0
 
   public lastTick: int
 
@@ -45,29 +41,54 @@ export class ClientEngine extends Destroyer implements OnDestroy {
 
   private _tick: int = 0
 
-  constructor(public aframe: AFrameService) {
-    super()
-    ClientEngine._sharedInstance = this
+  constructor() {
     this.renderer = new WebGLRenderer()
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
   }
 
-  public static getDeltaTime(): float {
-    return ClientEngine.deltaTime / 1000
+  //#region get/set
+  get step(): float {
+    return 1 / ClientEngine.TICK_RATE
   }
 
-  public static setDeltaTime(_deltaTime: int): void {
-    ClientEngine.deltaTime = Math.min(_deltaTime, 100)
+  get stepMs(): int {
+    return 1000 / ClientEngine.TICK_RATE
   }
 
-  public static getFixedDeltaTime(): float {
-    return ClientEngine.fixedDeltaTime / 1000
+  get fps(): int {
+    return Math.round(1000 / this.deltaTime)
   }
 
-  public static setFixedDeltaTime(_fixedDeltaTime: int): void {
-    ClientEngine.fixedDeltaTime = Math.min(_fixedDeltaTime, 100)
+  get tps(): int {
+    return Math.round(1000 / this.fixedDeltaTime)
   }
+
+  public static setTickRate(tickRate: byte): void {
+    ClientEngine.TICK_RATE = tickRate && tickRate > 0 && tickRate <= 60 ?
+      tickRate : ClientEngine.TICK_RATE
+  }
+
+  public getDeltaTime(): int {
+    return Math.min(this.deltaTime, 100)
+  }
+
+  public setDeltaTime(_deltaTime: int): void {
+    this.deltaTime = Math.min(_deltaTime, 100)
+  }
+
+  public getFixedDeltaTime(): float {
+    return this.fixedDeltaTime / 1000
+  }
+
+  public setFixedDeltaTime(_fixedDeltaTime: int): void {
+    this.fixedDeltaTime = Math.min(_fixedDeltaTime, 100)
+  }
+
+  public getRenderTimeOffset(): float {
+    return this.__accumulator / this.stepMs
+  }
+  //#endregion
 
   public stop(): void {
     this._shouldRender = false
@@ -94,27 +115,25 @@ export class ClientEngine extends Destroyer implements OnDestroy {
         return
       }
       // calculate deltaTime
-      ClientEngine.setDeltaTime(_timestamp - _engine.lastRenderTimestamp)
+      _engine.setDeltaTime(_timestamp - _engine.lastRenderTimestamp)
       // accumulate leftover frames to calculate alpha value for client side interp
-      ClientEngine._accumulator += ClientEngine.deltaTime
+      _engine.__accumulator += _engine.deltaTime
       // update fixed time step
-      while (ClientEngine._accumulator >= ClientEngine.STEP_MS) {
+      if (_engine.__accumulator >= _engine.stepMs) {
         // tick engine on fixed step
         const tick: int = _engine.tick()
         // update fixedDeltaTime
-        ClientEngine.setFixedDeltaTime(_timestamp - _engine.lastTick)
+        _engine.setFixedDeltaTime(_timestamp - _engine.lastTick)
         // run fixedUpdate hook for each GameObject
         _gameObjects.forEach(_object => {
-          _object.fixedUpdate(tick, ClientEngine.getFixedDeltaTime())
+          _object.fixedUpdate(tick, _engine.step)
         })
-        ClientEngine._accumulator -= ClientEngine.STEP_MS
+        _engine.__accumulator -= _engine.stepMs
       }
-      // calculate alpha
-      ClientEngine.alphaTime = ClientEngine._accumulator / ClientEngine.STEP_MS
       // run client-side refresh rate update
       // for each GameObject
       _gameObjects.forEach(_object => {
-        _object.update(ClientEngine.alphaTime)
+        _object.update(_engine.getRenderTimeOffset())
       })
       // render scene
       _engine.renderer.render(_scene, _camera)
@@ -126,16 +145,10 @@ export class ClientEngine extends Destroyer implements OnDestroy {
     // kick off game loop
     _gameLoop(performance.now())
   }
-
-  // client engine level get method for networking system
-  // that drives fixed update/server tick hook to tell clients
-  // to talk to server
-  public net(): ClientNetworkSystem {
-    return this.aframe.clientNetworkingSystem || null
-  }
-
-  ngOnDestroy() {
-    super.ngOnDestroy()
+  
+  public destroy(): void {
+    // teardown logic
+    this._shouldRender = false
   }
 
 }
