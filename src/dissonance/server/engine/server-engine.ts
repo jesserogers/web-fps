@@ -17,13 +17,13 @@ export class DServerEngine {
 
   public static TICK_RATE: byte = 20
 
-  public lastTickTimestamp: int
-
   public tick$ = new Subject<int>()
 
   public renderer: WebGLRenderer
 
   private _tick: int = 0
+
+  private _lastTickAt: int
 
   private _stop$ = new Subject()
 
@@ -42,7 +42,7 @@ export class DServerEngine {
   //#endregion
 
   public tick(): int {
-    this.lastTickTimestamp = performance.now()
+    this._lastTickAt = performance.now()
     this._tick += 1
     this.tick$.next(this._tick)
     return this._tick
@@ -55,9 +55,9 @@ export class DServerEngine {
     timer(0, DTime.fixedDeltaTime).pipe(takeUntil(this._stop$)).subscribe(
       () => {
         const _tick = this.tick()
-        _gameObjects.forEach(_object =>
-          _object.fixedUpdate(_tick)
-        )
+        for (let i = 0; i < _gameObjects.length; i++) {
+          _gameObjects[i].fixedUpdate(_tick)
+        }
         this.renderer.render(_scene, _camera)
       },
       err => {
