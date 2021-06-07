@@ -45,7 +45,7 @@ export class DClientEngine {
 
   constructor() {
     DTime.setFixedDeltaTime(1 / DClientEngine.TICK_RATE)
-    this.renderer = new WebGLRenderer()
+    this.renderer = new WebGLRenderer({ antialias: true })
     this.resize()
     window.onresize = this.resize.bind(this)
     document.body.appendChild(this.renderer.domElement)
