@@ -1,7 +1,7 @@
 import { Subject, timer } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { Camera, Scene, WebGLRenderer } from 'three'
-import { DTime, GameObject } from '@kuroi/common/core'
+import { DTime, GameObject } from '../../global'
 import SoftwareRenderer from 'three-software-renderer'
 
 export class DServerEngine {
@@ -53,7 +53,7 @@ export class DServerEngine {
       () => {
         const _tick = this.tick()
         _gameObjects.forEach(_object =>
-          _object.fixedUpdate(_tick, DTime.fixedDeltaTime)
+          _object.fixedUpdate(_tick)
         )
         this.renderer.render(_scene, _camera)
       },
