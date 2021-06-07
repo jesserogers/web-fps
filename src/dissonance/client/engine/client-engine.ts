@@ -22,7 +22,7 @@ export class DClientEngine {
     return this._sharedInstance
   }
 
-  public static TICK_RATE: byte = 24
+  public static TICK_RATE: byte = 20
   // #endregion
 
   //#region instance properties

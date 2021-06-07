@@ -15,7 +15,7 @@ export class DServerEngine {
     return DServerEngine._sharedInstance
   }
 
-  public static TICK_RATE: byte = 24
+  public static TICK_RATE: byte = 20
 
   public lastTickTimestamp: int
 
