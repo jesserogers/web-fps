@@ -82,7 +82,6 @@ export class DClientEngine {
     // define engine-level game loop logic
     function _gameLoop(_timestamp: int = 0) {
       if (!_engine._shouldRender) {
-        console.warn('STOPPING GAME LOOP')
         return
       }
       // calculate deltaTime
