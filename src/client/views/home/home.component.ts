@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { CubeBoi } from '@kuroi/game-objects'
-import { ClientEngine, LobbyService, UserInputService } from '@kuroi/core/services'
+import { LobbyService, UserInputService } from '@kuroi/core/services'
+import { DClientEngine } from '@kuroi/dissonance/client'
 import { take } from 'rxjs/operators'
 import { PerspectiveCamera, Scene } from 'three'
 
@@ -12,7 +13,7 @@ import { PerspectiveCamera, Scene } from 'three'
 })
 export class HomeComponent implements OnInit {
 
-  private clientEngine: ClientEngine = ClientEngine.getSharedinstance()
+  private clientEngine: DClientEngine = DClientEngine.getSharedinstance()
 
   constructor(
     private lobbyService: LobbyService,
@@ -23,7 +24,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    DClientEngine.setTickRate(20)
   }
 
   public newLobby(): void {

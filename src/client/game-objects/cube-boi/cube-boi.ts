@@ -1,5 +1,5 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
-import { GameObject, IGameObject } from '@kuroi/common/core/models/game-object'
+import { DTime, GameObject, IGameObject } from '@kuroi/dissonance/global'
 import { UserInputService } from '@kuroi/core/services';
 
 export class CubeBoi extends GameObject {
@@ -23,11 +23,11 @@ export class CubeBoi extends GameObject {
     console.log('CubeBoi started yuh')
   }
 
-  public fixedUpdate(tick: int, fixedDeltaTime: float): void {
+  public fixedUpdate(): void {
     // capture previous state before running simulation
     this.previousState.update(this.state)
     // run "physics" simulation
-    this.simulate(fixedDeltaTime)
+    this.simulate()
   }
 
   public update(deltaTime: float): void {
@@ -44,21 +44,21 @@ export class CubeBoi extends GameObject {
 
   }
 
-  private simulate(fixedDeltaTime: float): void {
+  private simulate(): void {
     // get position data from current state
     let { x, y, z } = this.state.position
     // handle movement inputs
     if (this.userInput.forward) {
-      z = z - (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+      z = z - (CubeBoi.MOVEMENT_SPEED * DTime.fixedDeltaTime)
     }
     if (this.userInput.backward) {
-      z = z + (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+      z = z + (CubeBoi.MOVEMENT_SPEED * DTime.fixedDeltaTime)
     }
     if (this.userInput.left) {
-      x = x - (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+      x = x - (CubeBoi.MOVEMENT_SPEED * DTime.fixedDeltaTime)
     }
     if (this.userInput.right) {
-      x = x + (CubeBoi.MOVEMENT_SPEED * fixedDeltaTime)
+      x = x + (CubeBoi.MOVEMENT_SPEED * DTime.fixedDeltaTime)
     }
     // apply simulation result to actual 3D object
     this.cube.position.set(x, y, z)
