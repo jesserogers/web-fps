@@ -1,7 +1,14 @@
-import { GameObject } from '../../global/models';
+/**
+ * @author kuro <kuro@kuroi.io>
+ * @fileoverview Client side Dissonance Engine
+ * @description Resonsible for running game loop and executing lifecycle hooks
+ *  for all GameObjects in the current scene
+ */
+
 import { Subject } from 'rxjs';
 import { Camera, Scene, WebGLRenderer } from 'three';
 import { DTime } from '../../global';
+import { GameObject } from '../../global/models';
 
 export class DClientEngine {
 
@@ -18,6 +25,7 @@ export class DClientEngine {
   public static TICK_RATE: byte = 24
   // #endregion
 
+  //#region instance properties
   public lastTick: int
 
   public tick$ = new Subject<int>()
@@ -32,9 +40,8 @@ export class DClientEngine {
 
   private _tick: int = 0
 
-  private _delta: int = 0
-
   private _accumulator: int = 0
+  //#endregion
 
   constructor() {
     DTime.setFixedDeltaTime(1 / DClientEngine.TICK_RATE)
@@ -51,11 +58,7 @@ export class DClientEngine {
     DTime.setFixedDeltaTime(1 / tickRate)
   }
 
-  public setDeltaTime(_deltaTime: int): void {
-    this._delta = Math.min(_deltaTime, 100)
-  }
-
-  public getRenderTimeOffset(): float {
+  public getDeltaTime(): float {
     return this._accumulator / DTime.getFixedDeltaMs()
   }
   //#endregion
@@ -72,11 +75,13 @@ export class DClientEngine {
   }
 
   public run(_scene: Scene, _camera: Camera, _gameObjects: GameObject[]): void {
-    // bootstrap logic to run scene
+    // reset values/flags
     this.lastRenderTimestamp = performance.now()
     this._shouldRender = true
-    // run start hook before gameloop begins
-    _gameObjects.forEach(_object => _object.start())
+    // run start hook on all game objects in scene
+    for (let i = 0; i < _gameObjects.length; i++) {
+      _gameObjects[i].start()
+    }
     // reference to client engine
     const _engine: DClientEngine = this
     // define engine-level game loop logic
@@ -85,24 +90,26 @@ export class DClientEngine {
         return
       }
       // calculate deltaTime
-      _engine.setDeltaTime(_timestamp - _engine.lastRenderTimestamp)
+      const _delta: int = Math.min(_timestamp - _engine.lastRenderTimestamp, 100)
+      const _stepms: int = DTime.getFixedDeltaMs()
       // accumulate leftover frames to calculate alpha value for client side interp
-      _engine._accumulator += _engine._delta
-      // update fixed time step
-      while (_engine._accumulator >= DTime.getFixedDeltaMs()) {
+      _engine._accumulator += _delta
+      // update on fixed time step
+      while (_engine._accumulator >= _stepms) {
         // tick engine on fixed step
-        const tick: int = _engine.tick()
+        const _tick: int = _engine.tick()
         // run fixedUpdate hook for each GameObject
-        _gameObjects.forEach(_object => {
-          _object.fixedUpdate(tick)
-        })
-        _engine._accumulator -= DTime.getFixedDeltaMs()
+        for (let i = 0; i < _gameObjects.length; i++) {
+          _gameObjects[i].fixedUpdate(_tick)
+        }
+        _engine._accumulator -= _stepms
       }
       // run client-side refresh rate update
       // for each GameObject
-      _gameObjects.forEach(_object => {
-        _object.update(_engine.getRenderTimeOffset())
-      })
+      const _deltaTime: float = _engine.getDeltaTime()
+      for (let i = 0; i < _gameObjects.length; i++) {
+        _gameObjects[i].update(_deltaTime)
+      }
       // render scene
       _engine.renderer.render(_scene, _camera)
       // save timestamp
