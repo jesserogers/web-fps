@@ -39,8 +39,9 @@ export class DClientEngine {
   constructor() {
     DTime.setFixedDeltaTime(1 / DClientEngine.TICK_RATE)
     this.renderer = new WebGLRenderer()
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
+    this.resize()
+    window.onresize = this.resize.bind(this)
+    document.body.appendChild(this.renderer.domElement)
   }
 
   //#region get/set
@@ -112,6 +113,10 @@ export class DClientEngine {
     }
     // kick off game loop
     _gameLoop(performance.now())
+  }
+
+  private resize(): void {
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
   }
   
   public destroy(): void {
