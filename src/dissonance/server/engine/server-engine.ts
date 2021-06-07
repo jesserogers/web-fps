@@ -48,6 +48,9 @@ export class DServerEngine {
     return this._tick
   }
 
+  // since the server will exclusively run game simulations, no need to worry about
+  // taking up resources with timers -- just run the simulation at a fixed rate until
+  // the engine stops
   public run(_scene: Scene, _camera: Camera, _gameObjects: GameObject[]): void {
     timer(0, DTime.fixedDeltaTime).pipe(takeUntil(this._stop$)).subscribe(
       () => {
