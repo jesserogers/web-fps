@@ -1,8 +1,8 @@
 import { Subject, timer } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { Camera, Scene, WebGLRenderer } from 'three'
-import { DTime, GameObject } from '../../global'
+import { WebGLRenderer } from 'three'
 import SoftwareRenderer from 'three-software-renderer'
+import { DTime, SceneConfig } from '../../global'
 
 export class DServerEngine {
 
@@ -51,14 +51,14 @@ export class DServerEngine {
   // since the server will exclusively run game simulations, no need to worry about
   // taking up resources with timers -- just run the simulation at a fixed rate until
   // the engine stops
-  public run(_scene: Scene, _camera: Camera, _gameObjects: GameObject[]): void {
+  public run(_config: SceneConfig): void {
     timer(0, DTime.fixedDeltaTime).pipe(takeUntil(this._stop$)).subscribe(
       () => {
         const _tick = this.tick()
-        for (let i = 0; i < _gameObjects.length; i++) {
-          _gameObjects[i].fixedUpdate(_tick)
+        for (let i = 0; i < _config.gameObjects.length; i++) {
+          _config.gameObjects[i].fixedUpdate(_tick)
         }
-        this.renderer.render(_scene, _camera)
+        this.renderer.render(_config.scene, _config.camera)
       },
       err => {
         console.error('[DServerEngine.run] uncaught exception', err)

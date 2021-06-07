@@ -5,10 +5,10 @@
  *  for all GameObjects in the current scene
  */
 
-import { Subject } from 'rxjs';
-import { Camera, Scene, WebGLRenderer } from 'three';
-import { DTime } from '../../global';
-import { GameObject } from '../../global/models';
+import { BehaviorSubject, Subject } from 'rxjs'
+import { Scene, WebGLRenderer } from 'three'
+import { DTime } from '../../global'
+import { ClientSceneConfig } from '../../global/models'
 
 export class DClientEngine {
 
@@ -30,6 +30,8 @@ export class DClientEngine {
 
   public tick$ = new Subject<int>()
 
+  public running$ = new BehaviorSubject<boolean>(false)
+
   public renderer: WebGLRenderer
 
   public lastRenderTimestamp: int
@@ -44,11 +46,13 @@ export class DClientEngine {
   //#endregion
 
   constructor() {
+    // set global fixedDeltaTime value
     DTime.setFixedDeltaTime(1 / DClientEngine.TICK_RATE)
+    // init with initial size
     this.renderer = new WebGLRenderer({ antialias: true })
     this.resize()
+    // set up resize listener
     window.onresize = this.resize.bind(this)
-    document.body.appendChild(this.renderer.domElement)
   }
 
   //#region get/set
@@ -65,6 +69,7 @@ export class DClientEngine {
 
   public stop(): void {
     this._shouldRender = false
+    this.running$.next(false)
   }
 
   public tick(): int {
@@ -74,13 +79,16 @@ export class DClientEngine {
     return this._tick
   }
 
-  public run(_scene: Scene, _camera: Camera, _gameObjects: GameObject[]): void {
+  public run(_config: ClientSceneConfig): void {
     // reset values/flags
     this.lastRenderTimestamp = performance.now()
     this._shouldRender = true
+    this.running$.next(true)
+    // add renderer DOM element to view
+    _config.renderTarget.appendChild(this.renderer.domElement)
     // run start hook on all game objects in scene
-    for (let i = 0; i < _gameObjects.length; i++) {
-      _gameObjects[i].start()
+    for (let i = 0; i < _config.gameObjects.length; i++) {
+      _config.gameObjects[i].start()
     }
     // reference to client engine
     const _engine: DClientEngine = this
@@ -99,19 +107,19 @@ export class DClientEngine {
         // tick engine on fixed step
         const _tick: int = _engine.tick()
         // run fixedUpdate hook for each GameObject
-        for (let i = 0; i < _gameObjects.length; i++) {
-          _gameObjects[i].fixedUpdate(_tick)
+        for (let i = 0; i < _config.gameObjects.length; i++) {
+          _config.gameObjects[i].fixedUpdate(_tick)
         }
         _engine._accumulator -= _stepms
       }
       // run client-side refresh rate update
       // for each GameObject
       const _deltaTime: float = _engine.getDeltaTime()
-      for (let i = 0; i < _gameObjects.length; i++) {
-        _gameObjects[i].update(_deltaTime)
+      for (let i = 0; i < _config.gameObjects.length; i++) {
+        _config.gameObjects[i].update(_deltaTime)
       }
       // render scene
-      _engine.renderer.render(_scene, _camera)
+      _engine.renderer.render(_config.scene, _config.camera)
       // save timestamp
       _engine.lastRenderTimestamp = _timestamp
       // run game loop
