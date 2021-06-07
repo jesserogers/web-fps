@@ -1,0 +1,8 @@
+{
+  "name": "@kuroi/dissonance",
+  "description": "A multiplayer game engine for web",
+  "version": "0.1.0",
+  "author": "kuro <kuro@kuroi.io>",
+  "license": "ISC",
+  "main": "index.js"
+}
