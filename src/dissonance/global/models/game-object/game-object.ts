@@ -26,16 +26,6 @@ export abstract class GameObject implements IGameObject {
   }
 
   abstract init(): void
-  
-  abstract start?(): void
-
-  // client side refresh rate
-  abstract update?(deltaTime?: float): void
-
-  // fixed time step
-  abstract fixedUpdate?(tick?: int): void
-
-  abstract stop?(): void
 
   public addChild(object: GameObject): void {
     this.children.set(object.objectId, object)
