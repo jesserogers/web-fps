@@ -1,20 +1,23 @@
 import { Randomizer } from '@kuroi/common/core/utils'
+import { Mesh } from 'three'
 import { GameObjectState } from './game-object-state'
 import { IGameObject } from './game-object.interface'
 
 export abstract class GameObject implements IGameObject {
 
-  public objectId: int
+  public children: Map<int, GameObject>
+
+  public mesh: Mesh
 
   public name: string
 
-  public online: boolean
+  public objectId: int
 
-  public state: GameObjectState
+  public online: boolean
 
   public previousState: GameObjectState
 
-  public children: Map<int, GameObject>
+  public state: GameObjectState
 
   constructor(object?: IGameObject) {
     this.objectId = object && object.objectId || Randomizer.generateNumericId()
